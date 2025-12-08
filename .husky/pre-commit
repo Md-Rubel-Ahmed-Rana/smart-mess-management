@@ -1,23 +1,19 @@
-# npm run type-check
-
-# npx lint-staged
-
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
-# Run only for backend branch or backend folder changes
-if [[ "$BRANCH" == "backend" ]] || git diff --cached --name-only | grep -q "^backend/"; then
-  echo "🟢 Backend commit detected — running tests, build, lint..."
+# Check if backend folder has staged changes
+if git diff --cached --name-only | grep -q "^backend/"; then
+  echo "🟢 Backend changes detected — running backend checks..."
 
   cd backend
-  yarn  type-check
+
   yarn install --silent
+  yarn type-check || exit 1
   yarn lint || exit 1
   yarn test || exit 1
   yarn build || exit 1
+
   echo "✅ Backend pre-commit checks passed!"
 else
-  echo "ℹ️ No backend changes — skipping backend pre-commit checks."
+  echo "ℹ️ No backend changes — skipping backend checks."
 fi

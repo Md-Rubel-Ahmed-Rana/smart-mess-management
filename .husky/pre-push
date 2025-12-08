@@ -1,18 +1,17 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
+# Detect if frontend has any commits not pushed yet
+CHANGED_FRONTEND=$(git diff --name-only origin/HEAD HEAD | grep "^frontend/")
 
-# Run only for frontend branch or frontend folder changes
-if [[ "$BRANCH" == "frontend" ]] || git diff --cached --name-only | grep -q "^frontend/"; then
-  echo "🟡 Frontend push detected — running Next.js build..."
+if [ -n "$CHANGED_FRONTEND" ]; then
+  echo "🟡 Frontend changes detected — running Next.js build..."
 
   cd frontend
-
   yarn install --silent
   yarn build || exit 1
 
-  echo "🚀 Frontend build successful — push allowed!"
+  echo "🚀 Frontend build successful — pushing allowed!"
 else
   echo "ℹ️ No frontend changes — skipping Next.js build."
 fi
