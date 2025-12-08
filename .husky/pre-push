@@ -9,8 +9,8 @@ if [[ "$BRANCH" == "frontend" ]] || git diff --cached --name-only | grep -q "^fr
 
   cd frontend
 
-  npm install --silent
-  npm run build || exit 1
+  yarn install --silent
+  yarn build || exit 1
 
   echo "🚀 Frontend build successful — push allowed!"
 else
