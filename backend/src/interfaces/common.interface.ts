@@ -1,5 +1,5 @@
-import { IRoles } from "@/constants/roles";
-import { Types } from "mongoose";
+import { IRoles } from '@/constants/roles';
+import { Types } from 'mongoose';
 
 export type IJWtPayload = {
   id: string | Types.ObjectId;
@@ -27,8 +27,6 @@ export type ILoginResponse = {
   access_token: string;
   refresh_token: string;
 };
-
- 
 
 export type IGenericErrorMessage = {
   path: string | number;

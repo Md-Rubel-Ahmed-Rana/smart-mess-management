@@ -1,4 +1,4 @@
-import { SortOrder } from "mongoose";
+import { SortOrder } from 'mongoose';
 
 type IOptions = {
   page?: number;
@@ -18,8 +18,8 @@ type IReturnOptions = {
 const calculatePagination = (options: IOptions): IReturnOptions => {
   const page = Number(options?.page || 1);
   const limit = Number(options?.limit || 10);
-  const sortBy = options.sortBy || "createdAt";
-  const sortOrder = options.sortOrder || "desc";
+  const sortBy = options.sortBy || 'createdAt';
+  const sortOrder = options.sortOrder || 'desc';
 
   const skip = (page - 1) * limit;
   return {

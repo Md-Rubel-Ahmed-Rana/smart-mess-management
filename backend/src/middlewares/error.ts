@@ -34,7 +34,7 @@ class ApiError extends Error {
    * throw new ApiError(500, "Internal server error", "CustomStackInfo");
    * ```
    */
-  constructor(statusCode: number, message: string | undefined, stack = "") {
+  constructor(statusCode: number, message: string | undefined, stack = '') {
     super(message);
     this.statusCode = statusCode;
 

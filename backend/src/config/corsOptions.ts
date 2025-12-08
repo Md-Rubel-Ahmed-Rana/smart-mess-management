@@ -1,5 +1,5 @@
-import cors from "cors";
-import { envConfig } from ".";
+import cors from 'cors';
+import { envConfig } from '.';
 
 export const corsOptions: cors.CorsOptions = {
   origin: function (origin, callback) {
@@ -12,5 +12,5 @@ export const corsOptions: cors.CorsOptions = {
     }
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 };

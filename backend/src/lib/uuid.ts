@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * UUID Service
@@ -36,7 +36,7 @@ class Service {
    * @returns {string} The first segment (before the first dash) of a UUID.
    */
   public generateFirstPart(): string {
-    return uuidv4().split("-")[0];
+    return uuidv4().split('-')[0];
   }
 
   /**
@@ -53,7 +53,7 @@ class Service {
    * @returns {string} The last segment (after the last dash) of a UUID.
    */
   public generateLastPart(): string {
-    const parts = uuidv4().split("-");
+    const parts = uuidv4().split('-');
     return parts[parts.length - 1];
   }
 
@@ -71,7 +71,7 @@ class Service {
    * @returns {string} A UUID string with all dashes removed.
    */
   public generateWithoutDash(): string {
-    return uuidv4().replace(/-/g, "");
+    return uuidv4().replace(/-/g, '');
   }
 
   /**

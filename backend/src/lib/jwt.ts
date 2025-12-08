@@ -1,47 +1,47 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from 'express';
 import jwt, {
   JsonWebTokenError,
   JwtPayload,
   TokenExpiredError,
-} from "jsonwebtoken";
-import { envConfig } from "../config";
-import { IJWtPayload } from "@/interfaces/common.interface";
-import ApiError from "@/middlewares/error";
-import { HttpStatusCode } from "./httpStatus";
-import { cookieManager } from "@/shared/cookie";
-import { IRoles } from "@/constants/roles";
+} from 'jsonwebtoken';
+import { envConfig } from '../config';
+import { IJWtPayload } from '@/interfaces/common.interface';
+import ApiError from '@/middlewares/error';
+import { HttpStatusCode } from './httpStatus';
+import { cookieManager } from '@/shared/cookie';
+import { IRoles } from '@/constants/roles';
 
 class JWT {
   private signToken = async (
     payload: Partial<IJWtPayload>,
     secret: string,
-    expiresIn: string
+    expiresIn: string,
   ): Promise<string> => {
     return jwt.sign(payload, secret, { expiresIn } as any);
   };
 
   private generateAccessToken = async (
-    payload: Partial<IJWtPayload>
+    payload: Partial<IJWtPayload>,
   ): Promise<string> => {
     return this.signToken(
       payload,
       envConfig.jwt.secret,
-      envConfig.jwt.access_token_expires
+      envConfig.jwt.access_token_expires,
     );
   };
 
   private generateRefreshToken = async (
-    payload: Partial<IJWtPayload>
+    payload: Partial<IJWtPayload>,
   ): Promise<string> => {
     return this.signToken(
       payload,
       envConfig.jwt.secret,
-      envConfig.jwt.refresh_token_expires
+      envConfig.jwt.refresh_token_expires,
     );
   };
 
   async generateTokens(
-    payload: Partial<IJWtPayload>
+    payload: Partial<IJWtPayload>,
   ): Promise<{ access_token: string; refresh_token: string }> {
     const access_token = await this.generateAccessToken(payload);
     const refresh_token = await this.generateRefreshToken(payload);
@@ -49,19 +49,19 @@ class JWT {
   }
 
   async generateEmailVerificationToken(payload: Partial<IJWtPayload>) {
-    return await this.signToken(payload, envConfig.jwt.secret, "10m");
+    return await this.signToken(payload, envConfig.jwt.secret, '10m');
   }
 
   authenticate(allowedRoles?: IRoles[]) {
     return async (req: Request, res: Response, next: NextFunction) => {
-      const { access_token, refresh_token } = this.extractTokens(req, "header");
+      const { access_token, refresh_token } = this.extractTokens(req, 'header');
 
       if (!access_token && !refresh_token) {
         return next(
           new ApiError(
             HttpStatusCode.UNAUTHORIZED,
-            "Unauthenticated access. Please login to access resource(s)"
-          )
+            'Unauthenticated access. Please login to access resource(s)',
+          ),
         );
       }
 
@@ -70,28 +70,31 @@ class JWT {
           return next(
             new ApiError(
               HttpStatusCode.UNAUTHORIZED,
-              "Unauthenticated access. Please login to access resource(s)"
-            )
+              'Unauthenticated access. Please login to access resource(s)',
+            ),
           );
         }
         const payload = jwt.verify(
           access_token,
-          envConfig.jwt.secret
+          envConfig.jwt.secret,
         ) as unknown as IJWtPayload;
 
         if (!payload.id) {
           return next(
             new ApiError(
               HttpStatusCode.UNAUTHORIZED,
-              "Invalid authentication token"
-            )
+              'Invalid authentication token',
+            ),
           );
         }
 
         if (Array.isArray(allowedRoles) && allowedRoles.length > 0) {
           if (!allowedRoles.includes(payload.role as IRoles)) {
             return next(
-              new ApiError(HttpStatusCode.FORBIDDEN, "Forbidden: Access denied")
+              new ApiError(
+                HttpStatusCode.FORBIDDEN,
+                'Forbidden: Access denied',
+              ),
             );
           }
         }
@@ -104,8 +107,8 @@ class JWT {
             return next(
               new ApiError(
                 HttpStatusCode.UNAUTHORIZED,
-                "Unauthenticated access. Please login to access resource(s)"
-              )
+                'Unauthenticated access. Please login to access resource(s)',
+              ),
             );
           }
           return this.handleExpiredAccessToken(refresh_token, res, next);
@@ -113,11 +116,11 @@ class JWT {
 
         if (error?.statusCode === HttpStatusCode.FORBIDDEN) {
           return next(
-            new ApiError(HttpStatusCode.FORBIDDEN, "Forbidden: Access denied")
+            new ApiError(HttpStatusCode.FORBIDDEN, 'Forbidden: Access denied'),
           );
         }
         return next(
-          new ApiError(HttpStatusCode.UNAUTHORIZED, "Authentication failed")
+          new ApiError(HttpStatusCode.UNAUTHORIZED, 'Authentication failed'),
         );
       }
     };
@@ -127,7 +130,7 @@ class JWT {
     if (!token) {
       throw new ApiError(
         HttpStatusCode.BAD_REQUEST,
-        "Verification token is required"
+        'Verification token is required',
       );
     }
 
@@ -141,27 +144,27 @@ class JWT {
       if (error instanceof TokenExpiredError) {
         throw new ApiError(
           HttpStatusCode.UNAUTHORIZED,
-          "Your verification link has expired. Please request a new one."
+          'Your verification link has expired. Please request a new one.',
         );
       }
 
       if (error instanceof JsonWebTokenError) {
         throw new ApiError(
           HttpStatusCode.UNAUTHORIZED,
-          "Invalid or malformed verification token"
+          'Invalid or malformed verification token',
         );
       }
 
       throw new ApiError(
         HttpStatusCode.INTERNAL_SERVER_ERROR,
-        "Failed to verify email token"
+        'Failed to verify email token',
       );
     }
   }
 
   private extractTokens(
     req: Request,
-    sourceType: "cookie" | "header"
+    sourceType: 'cookie' | 'header',
   ): {
     access_token: string | undefined;
     refresh_token: string | undefined;
@@ -169,13 +172,13 @@ class JWT {
     let access_token = undefined;
     let refresh_token = undefined;
 
-    if (sourceType === "cookie") {
+    if (sourceType === 'cookie') {
       access_token = req.cookies[envConfig.jwt.access_cookie_name] || undefined;
       refresh_token =
         req.cookies[envConfig.jwt.refresh_cookie_name] || undefined;
-    } else if (sourceType === "header") {
-      access_token = req.headers["authorization"] || undefined;
-      refresh_token = req.headers["x-refresh-token"] || undefined;
+    } else if (sourceType === 'header') {
+      access_token = req.headers['authorization'] || undefined;
+      refresh_token = req.headers['x-refresh-token'] || undefined;
     }
 
     console.log({ sourceType, access_token, refresh_token });
@@ -186,12 +189,12 @@ class JWT {
   private handleExpiredAccessToken = async (
     refresh_token: string,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     try {
       const result = jwt.verify(
         refresh_token,
-        envConfig.jwt.secret
+        envConfig.jwt.secret,
       ) as IJWtPayload;
 
       const payload: IJWtPayload = {
@@ -209,7 +212,7 @@ class JWT {
       if (error instanceof TokenExpiredError) {
         return this.logoutUser(res);
       }
-      throw new ApiError(HttpStatusCode.UNAUTHORIZED, "Unauthenticated access");
+      throw new ApiError(HttpStatusCode.UNAUTHORIZED, 'Unauthenticated access');
     }
   };
 
@@ -218,7 +221,7 @@ class JWT {
     return res.status(HttpStatusCode.OK).json({
       statusCode: HttpStatusCode.OK,
       success: true,
-      message: "You have logged out",
+      message: 'You have logged out',
       data: null,
     });
   };

@@ -1,7 +1,7 @@
-import { emitter } from "@/events/eventEmitter";
-import { Request, Response, NextFunction } from "express";
-import { envConfig } from "../config";
-import { TraceService } from "@/lib/trace";
+import { emitter } from '@/events/eventEmitter';
+import { Request, Response, NextFunction } from 'express';
+import { envConfig } from '../config';
+import { TraceService } from '@/lib/trace';
 
 /**
  * Logger Middleware
@@ -30,7 +30,7 @@ import { TraceService } from "@/lib/trace";
 export const loggerMiddleware = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Record the request start time for duration calculation
   const startTime = Date.now();
@@ -46,7 +46,7 @@ export const loggerMiddleware = (
     const duration = Date.now() - startTime; // Total response time in ms
 
     // Capture request input (query params for GET, body for others)
-    const input = req.method === "GET" ? req.query : req.body;
+    const input = req.method === 'GET' ? req.query : req.body;
 
     // Collect log data
     const logData = {
@@ -57,15 +57,15 @@ export const loggerMiddleware = (
       method: req.method,
       input,
       output: body,
-      fullUrl: `${req.protocol}://${req.get("host")}${req.originalUrl}`,
+      fullUrl: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
     };
 
     // Output log to console (useful during development)
     console.log(logData);
 
     // Emit async event for persistent logging (only in development mode)
-    if (envConfig.app.env === "development") {
-      emitter.emitAsync("apiLog", logData);
+    if (envConfig.app.env === 'development') {
+      emitter.emitAsync('apiLog', logData);
     }
 
     // Return the original response behavior

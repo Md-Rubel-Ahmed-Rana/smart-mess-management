@@ -1,4 +1,4 @@
-import { UUIDService } from "./uuid";
+import { UUIDService } from './uuid';
 
 class Service {
   generateAPIRequestTraceId(): string {

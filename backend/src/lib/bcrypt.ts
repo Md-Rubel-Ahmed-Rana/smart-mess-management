@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
 /**
  * Bcrypt Service
@@ -43,7 +43,7 @@ class Bcrypt {
    */
   public async compare(
     password: string,
-    encryptedPassword: string
+    encryptedPassword: string,
   ): Promise<boolean> {
     const isMatchedPassword = await bcrypt.compare(password, encryptedPassword);
     return isMatchedPassword;

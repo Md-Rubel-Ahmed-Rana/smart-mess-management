@@ -1,6 +1,6 @@
 const pickQueries = <T extends object, K extends keyof T>(
   obj: T,
-  keys: K[]
+  keys: K[],
 ): Partial<T> => {
   const queryObj: Partial<T> = {};
   for (const key of keys) {

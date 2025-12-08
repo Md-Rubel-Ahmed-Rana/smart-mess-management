@@ -1,9 +1,9 @@
-import { Server } from "http";
-import app from "./app";
-import { envConfig } from "./config";
-import mongodbConnection from "./config/mongoDbConnection";
+import { Server } from 'http';
+import app from './app';
+import { envConfig } from './config';
+import mongodbConnection from './config/mongoDbConnection';
 
-process.on("uncaughtException", (error) => {
+process.on('uncaughtException', (error) => {
   console.error(`Uncaught Exception: ${error.message}`, { stack: error.stack });
   process.exit(1);
 });
@@ -17,7 +17,6 @@ async function main() {
     await mongodbConnection();
     server = app.listen(port, async () => {
       console.info(`🚀 Application is running on port ${port}`);
-      console.log("Added console to test husky");
     });
   } catch (error: any) {
     console.error(`❌ Failed to start server: ${error.message}`, {
@@ -26,7 +25,7 @@ async function main() {
     process.exit(1);
   }
 
-  process.on("unhandledRejection", (error: any) => {
+  process.on('unhandledRejection', (error: any) => {
     console.error(`Unhandled Promise Rejection: ${error?.message}`, {
       stack: error?.stack,
     });
@@ -40,11 +39,11 @@ async function main() {
 
 main();
 
-process.on("SIGTERM", () => {
-  console.warn("SIGTERM received. Shutting down gracefully...");
+process.on('SIGTERM', () => {
+  console.warn('SIGTERM received. Shutting down gracefully...');
   if (server) {
     server.close(() => {
-      console.info("Server closed.");
+      console.info('Server closed.');
     });
   }
 });

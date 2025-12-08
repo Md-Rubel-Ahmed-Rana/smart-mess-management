@@ -1,61 +1,58 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-import { ZodError } from "zod";
-import mongoose from "mongoose";
-import ApiError from "./error";
-import { HttpStatusCode } from "@/lib/httpStatus";
-import multer from "multer";
-import { IGenericErrorMessage } from "@/interfaces/common.interface";
+import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod';
+import mongoose from 'mongoose';
+import ApiError from './error';
+import { HttpStatusCode } from '@/lib/httpStatus';
+import multer from 'multer';
+import { IGenericErrorMessage } from '@/interfaces/common.interface';
 
 class ErrorHandler {
   private statusCode: number = HttpStatusCode.INTERNAL_SERVER_ERROR;
-  private message: string = "Something went wrong";
+  private message: string = 'Something went wrong';
   private errorMessages: IGenericErrorMessage[] = [];
 
   constructor() {}
 
   // catch zod validation error
   public handleZodValidationError(error: ZodError) {
-    const errors: IGenericErrorMessage[] = error.issues.map(
-      (issue: any ) => {
-        if (issue.code === "unrecognized_keys" && (issue as any).keys) {
-          const keys = (issue as any).keys;
-          return {
-            path: issue?.path[issue.path.length - 1] || "body",
-            message: `The field(s) ${keys.map((key: string) => `'${key}'`).join(", ")} are not allowed.`,
-          };
-        }
-
-        if (
-          issue.code === "custom" &&
-          issue.message === "At least one field is required"
-        ) {
-          return {
-            path: issue?.path[issue.path.length - 1] || "body",
-            message: "Please provide at least one field to update.",
-          };
-        }
-
+    const errors: IGenericErrorMessage[] = error.issues.map((issue: any) => {
+      if (issue.code === 'unrecognized_keys' && (issue as any).keys) {
+        const keys = (issue as any).keys;
         return {
-          path: issue?.path[issue.path.length - 1] || "body",
-          message: issue?.message,
+          path: issue?.path[issue.path.length - 1] || 'body',
+          message: `The field(s) ${keys.map((key: string) => `'${key}'`).join(', ')} are not allowed.`,
         };
       }
-    );
+
+      if (
+        issue.code === 'custom' &&
+        issue.message === 'At least one field is required'
+      ) {
+        return {
+          path: issue?.path[issue.path.length - 1] || 'body',
+          message: 'Please provide at least one field to update.',
+        };
+      }
+
+      return {
+        path: issue?.path[issue.path.length - 1] || 'body',
+        message: issue?.message,
+      };
+    });
 
     this.statusCode = HttpStatusCode.BAD_REQUEST;
-    this.message = "Validation Error";
+    this.message = 'Validation Error';
     this.errorMessages = errors;
   }
 
   // catch api errors
   public handleApiError(error: ApiError) {
     this.statusCode = error?.statusCode || HttpStatusCode.INTERNAL_SERVER_ERROR;
-    this.message = error.message || "Something went wrong";
+    this.message = error.message || 'Something went wrong';
     this.errorMessages = error?.message
       ? [
           {
-            path: "",
+            path: '',
             message: error.message,
           },
         ]
@@ -64,11 +61,11 @@ class ErrorHandler {
 
   // handle generic error
   public handleGenericError(error: Error) {
-    this.message = error?.message || "Something went wrong";
+    this.message = error?.message || 'Something went wrong';
     this.errorMessages = error?.message
       ? [
           {
-            path: "",
+            path: '',
             message: error.message,
           },
         ]
@@ -80,7 +77,7 @@ class ErrorHandler {
     const errors: IGenericErrorMessage[] = [
       {
         path: error.path,
-        message: "Invalid id!",
+        message: 'Invalid id!',
       },
     ];
 
@@ -97,31 +94,31 @@ class ErrorHandler {
           path: el?.path,
           message: el?.message,
         };
-      }
+      },
     );
     this.statusCode = HttpStatusCode.BAD_REQUEST;
     this.errorMessages = errors;
-    this.message = "Validation Error!";
+    this.message = 'Validation Error!';
   }
 
   // handle multer file size error
   public handleMulterError(error: multer.MulterError) {
-    if (error.code === "LIMIT_FILE_SIZE") {
+    if (error.code === 'LIMIT_FILE_SIZE') {
       this.statusCode = HttpStatusCode.BAD_REQUEST;
       this.message =
-        "Image exceeds 5MB size limit. Please upload a smaller file.";
+        'Image exceeds 5MB size limit. Please upload a smaller file.';
       this.errorMessages = [
         {
-          path: "file",
-          message: "Image exceeds 5MB size limit.",
+          path: 'file',
+          message: 'Image exceeds 5MB size limit.',
         },
       ];
     } else {
       this.statusCode = HttpStatusCode.BAD_REQUEST;
-      this.message = error.message || "File upload error.";
+      this.message = error.message || 'File upload error.';
       this.errorMessages = [
         {
-          path: "file",
+          path: 'file',
           message: error.message,
         },
       ];
@@ -132,14 +129,14 @@ class ErrorHandler {
     error,
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ) => {
     if (error instanceof ZodError) {
       this.handleZodValidationError(error);
     } else if (
       error instanceof ApiError ||
-      error?.constructor?.name === "ApiError" ||
-      (error?.statusCode && typeof error.statusCode === "number")
+      error?.constructor?.name === 'ApiError' ||
+      (error?.statusCode && typeof error.statusCode === 'number')
     ) {
       this.handleApiError(error as ApiError);
     } else if (error instanceof multer.MulterError) {
@@ -157,7 +154,7 @@ class ErrorHandler {
       success: false,
       message: this.message,
       errorMessages: this.errorMessages,
-      stack: process.env.NODE_ENV !== "production" ? error.stack : undefined,
+      stack: process.env.NODE_ENV !== 'production' ? error.stack : undefined,
     });
   };
 }

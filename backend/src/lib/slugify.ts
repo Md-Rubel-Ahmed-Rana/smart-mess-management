@@ -1,4 +1,4 @@
-import slugify from "slugify";
+import slugify from 'slugify';
 
 /**
  * Slugify Service
@@ -18,12 +18,12 @@ class Service {
    * - `locale`: Language locale (default: "en")
    */
   private readonly options = {
-    replacement: "-",
+    replacement: '-',
     remove: /[*+~.()'"!:@]/g,
     lower: true,
     strict: true,
     trim: true,
-    locale: "en",
+    locale: 'en',
   };
 
   /**
@@ -43,7 +43,7 @@ class Service {
    * @returns {string} The generated slug (or an empty string if input is invalid).
    */
   public generateSlug(text: string): string {
-    if (!text) return "";
+    if (!text) return '';
     return slugify(text, this.options);
   }
 }

@@ -1,8 +1,8 @@
-import { envConfig } from "@/config/index";
-import { HttpStatusCode } from "@/lib/httpStatus";
-import ApiError from "@/middlewares/error";
-import nodemailer from "nodemailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { envConfig } from '@/config/index';
+import { HttpStatusCode } from '@/lib/httpStatus';
+import ApiError from '@/middlewares/error';
+import nodemailer from 'nodemailer';
+import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 class Mail {
   async sendEmail(
@@ -10,7 +10,7 @@ class Mail {
     to: string | string[],
     htmlContent: string,
     bcc?: string[],
-    cc?: string[]
+    cc?: string[],
   ) {
     const transporter = nodemailer.createTransport({
       host: envConfig.email.host,
@@ -45,7 +45,7 @@ class Mail {
       console.error(`[EmailService] ❌ Failed: ${error.message}`);
       throw new ApiError(
         HttpStatusCode.INTERNAL_SERVER_ERROR,
-        "Failed to send email. Please try again later."
+        'Failed to send email. Please try again later.',
       );
     }
   }

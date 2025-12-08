@@ -1,4 +1,4 @@
-import multer from "multer";
+import multer from 'multer';
 
 export const upload: any = multer({
   storage: multer.memoryStorage(),

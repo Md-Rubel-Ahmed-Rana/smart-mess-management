@@ -1,1 +1,1 @@
-import "./logger.event";
+import './logger.event';

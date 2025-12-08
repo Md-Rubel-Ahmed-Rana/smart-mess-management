@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { envConfig } from "../config";
+import { Response } from 'express';
+import { envConfig } from '../config';
 
 class CookieManager {
   private readonly accessTokenName = envConfig.jwt.access_cookie_name;
@@ -7,21 +7,21 @@ class CookieManager {
 
   private cookieOptions = {
     httpOnly: true,
-    sameSite: "none" as const,
+    sameSite: 'none' as const,
     secure: true,
     maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
   };
 
   private clearCookieOptions = {
     httpOnly: true,
-    sameSite: "none" as const,
+    sameSite: 'none' as const,
     secure: true,
   };
 
   public setTokens(
     res: Response,
     accessToken: string,
-    refreshToken: string
+    refreshToken: string,
   ): void {
     res.cookie(this.accessTokenName, accessToken, this.cookieOptions);
     res.cookie(this.refreshTokenName, refreshToken, this.cookieOptions);

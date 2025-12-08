@@ -1,0 +1,43 @@
+{
+  // === Editor Basics ===
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.fixAll.eslint": "always"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // === ESLint ===
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.options": {
+    "configFile": "eslint.config.js"
+  },
+  "eslint.alwaysShowStatus": true,
+
+  // === Prettier ===
+  "prettier.enableDebugLogs": false,
+  "prettier.requireConfig": true,
+
+  // === TypeScript ===
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // === Path Aliases Support ===
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+
+  // === Files / Exclusions ===
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true
+  },
+
+  // === Terminal ===
+  "terminal.integrated.inheritEnv": true
+}
