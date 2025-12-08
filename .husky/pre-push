@@ -1,15 +1,24 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+# Husky v10 compatible pre-push hook
 
-# Detect if frontend has any commits not pushed yet
-CHANGED_FRONTEND=$(git diff --name-only origin/HEAD HEAD | grep "^frontend/")
+# Exit immediately if any command fails
+set -e
+
+# === Optional: Fetch latest remote refs to avoid "unknown revision" errors ===
+git fetch origin || true
+
+# Replace 'main' with your default branch if different
+DEFAULT_BRANCH="main"
+
+# Detect if frontend has any changes compared to remote main
+CHANGED_FRONTEND=$(git diff --name-only origin/$DEFAULT_BRANCH HEAD | grep "^frontend/" || true)
 
 if [ -n "$CHANGED_FRONTEND" ]; then
   echo "🟡 Frontend changes detected — running Next.js build..."
 
   cd frontend
   yarn install --silent
-  yarn build || exit 1
+  yarn build || { echo "❌ Frontend build failed"; exit 1; }
 
   echo "🚀 Frontend build successful — pushing allowed!"
 else
