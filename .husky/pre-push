@@ -1,0 +1,18 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Run only for frontend branch or frontend folder changes
+if [[ "$BRANCH" == "frontend" ]] || git diff --cached --name-only | grep -q "^frontend/"; then
+  echo "🟡 Frontend push detected — running Next.js build..."
+
+  cd frontend
+
+  npm install --silent
+  npm run build || exit 1
+
+  echo "🚀 Frontend build successful — push allowed!"
+else
+  echo "ℹ️ No frontend changes — skipping Next.js build."
+fi

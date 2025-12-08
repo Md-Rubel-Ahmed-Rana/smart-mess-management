@@ -1,0 +1,24 @@
+# npm run type-check
+
+# npx lint-staged
+
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Run only for backend branch or backend folder changes
+if [[ "$BRANCH" == "backend" ]] || git diff --cached --name-only | grep -q "^backend/"; then
+  echo "🟢 Backend commit detected — running tests, build, lint..."
+
+  cd backend
+
+  npm install --silent
+  npm run lint || exit 1
+  npm run test || exit 1
+  npm run build || exit 1
+
+  echo "✅ Backend pre-commit checks passed!"
+else
+  echo "ℹ️ No backend changes — skipping backend pre-commit checks."
+fi
