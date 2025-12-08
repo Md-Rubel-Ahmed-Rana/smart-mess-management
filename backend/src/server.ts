@@ -17,6 +17,7 @@ async function main() {
     await mongodbConnection();
     server = app.listen(port, async () => {
       console.info(`🚀 Application is running on port ${port}`);
+      console.log("Added console to test husky");
     });
   } catch (error: any) {
     console.error(`❌ Failed to start server: ${error.message}`, {
