@@ -10,7 +10,13 @@ jest.mock('next/font/google', () => ({
 describe('Home Page', () => {
   it('renders headings correctly', () => {
     render(<Home />);
+    // Check for the presence of headings
     expect(screen.getByText('Welcome to;')).toBeInTheDocument();
+    // Check for the presence of subheading
     expect(screen.getByText('Smart Mess Management')).toBeInTheDocument();
+    // Check for the presence of description paragraph
+    expect(
+      screen.getByText(/Smart Mess Management is an innovative solution/i),
+    ).toBeInTheDocument();
   });
 });

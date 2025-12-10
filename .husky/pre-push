@@ -1,16 +1,9 @@
-#!/bin/sh
-# Husky v10 compatible pre-push hook
-
-# Exit immediately if any command fails
 set -e
 
-# === Optional: Fetch latest remote refs to avoid "unknown revision" errors ===
 git fetch origin || true
 
-# Replace 'main' with your default branch if different
 DEFAULT_BRANCH="main"
 
-# Detect if frontend has any changes compared to remote main
 CHANGED_FRONTEND=$(git diff --name-only origin/$DEFAULT_BRANCH HEAD | grep "^frontend/" || true)
 
 if [ -n "$CHANGED_FRONTEND" ]; then
@@ -18,7 +11,6 @@ if [ -n "$CHANGED_FRONTEND" ]; then
 
   cd frontend
 
-  # Remove .next folder before installing/building
   if [ -d ".next" ]; then
     echo "=============================="
     echo "🧹 Cleaning up previous Next.js build (.next folder)..."

@@ -1,7 +1,5 @@
-#!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Check if backend folder has staged changes
 if git diff --cached --name-only | grep -q "^backend/"; then
   echo "🟢 Backend changes detected — running backend checks..."
 
