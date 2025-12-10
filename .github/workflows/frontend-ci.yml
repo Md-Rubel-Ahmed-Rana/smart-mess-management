@@ -1,0 +1,42 @@
+name: Frontend CI
+
+on:
+  push:
+    branches: ['frontend/*']
+  pull_request:
+    branches: ['frontend/*', 'main']
+
+jobs:
+  frontend-ci:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn ci
+
+      - name: Lint check
+        run: yarn lint
+
+      - name: Prettier format check
+        run: yarn prettier:check
+
+      - name: Run tests (optional)
+        run: yarn test -- --watch=false
+        continue-on-error: true # set to `false` if you want strict test rules
+
+      - name: Build the frontend
+        run: yarn build
