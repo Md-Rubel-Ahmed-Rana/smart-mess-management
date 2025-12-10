@@ -2,6 +2,7 @@
   "name": "smart-mess-management-system",
   "version": "1.0.0",
   "description": "This is a mess management system",
+  "license": "MIT",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
