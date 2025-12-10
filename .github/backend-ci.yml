@@ -1,0 +1,44 @@
+name: Backend CI
+
+on:
+  push:
+    branches: ['backend/*']
+  pull_request:
+    branches: ['backend/*', 'main']
+
+jobs:
+  backend-ci:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: backend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn ci
+
+      - name: Lint check
+        run: yarn lint
+
+      - name: Prettier format check
+        run: yarn prettier:check
+
+      - name: Type check
+        run: yarn type-check
+
+      - name: Run tests
+        run: yarn test -- --coverage
+
+      - name: Build
+        run: yarn build
