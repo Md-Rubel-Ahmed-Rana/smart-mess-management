@@ -1,9 +1,7 @@
 {
-  "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
+  "name": "smart-mess-management-system",
+  "version": "1.0.0",
+  "description": "This is a mess management system",
   "scripts": {
     "prepare": "husky",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

@@ -3,7 +3,6 @@
   "description": "This is the backend for Smart Mess Management System. It provides APIs for managing mess operations, user authentication, and data storage. Built with Node.js, Express, and MongoDB.",
   "type": "commonjs",
   "version": "1.0.0",
-  "private": true,
   "keywords": [
     "mess management",
     "backend",
