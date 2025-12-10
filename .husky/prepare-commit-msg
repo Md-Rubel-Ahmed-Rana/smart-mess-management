@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Skip if commit message already exists (like merge commits)
+[ -z "$(cat "$1")" ] && exec < /dev/tty && git cz --hook || true
