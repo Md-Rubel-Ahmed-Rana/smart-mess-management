@@ -21,7 +21,7 @@
   "license": "ISC",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc && tsc-alias && npm run lint:fix && npm run prettier:fix",
+    "build": "tsc && tsc-alias",
     "start": "node -r tsconfig-paths/register dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
     "test": "node_modules/.bin/jest",
