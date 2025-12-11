@@ -34,11 +34,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Lint check
-        run: yarn lint
+      - name: Lint check and fix
+        run: yarn lint && yarn lint:fix
 
-      - name: Prettier format check
-        run: yarn prettier:check
+      - name: Prettier format check and fix
+        run: yarn prettier:check && yarn prettier:fix
 
       - name: Run tests (optional)
         run: yarn test -- --watch=false
