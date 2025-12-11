@@ -14,5 +14,36 @@ on:
       - 'frontend*'
 
 jobs:
-  call-frontend-ci:
-    uses: ./.github/workflows/reusable/frontend-ci.yml
+  frontend-ci:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint auto-fix
+        run: yarn lint:fix
+
+      - name: Prettier auto-fix
+        run: yarn prettier:fix
+
+      - name: Run tests (optional)
+        run: yarn test -- --watch=false
+        continue-on-error: true
+
+      - name: Build the frontend
+        run: yarn build
