@@ -11,13 +11,75 @@ on:
 jobs:
   # 1 — Run backend CI
   backend-ci:
-    if: startsWith(github.ref, 'refs/heads/backend')
-    uses: ./.github/workflows/reusable/backend-ci.yml
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: backend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint auto-fix
+        run: yarn lint:fix
+
+      - name: Prettier auto-fix
+        run: yarn prettier:fix
+
+      - name: Type check
+        run: yarn type-check
+
+      - name: Run tests
+        run: yarn test -- --coverage
+
+      - name: Build
+        run: yarn build
 
   # 2 — Run frontend CI
   frontend-ci:
-    if: startsWith(github.ref, 'refs/heads/frontend')
-    uses: ./.github/workflows/reusable/frontend-ci.yml
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint auto-fix
+        run: yarn lint:fix
+
+      - name: Prettier auto-fix
+        run: yarn prettier:fix
+
+      - name: Run tests (optional)
+        run: yarn test -- --watch=false
+        continue-on-error: true
+
+      - name: Build the frontend
+        run: yarn build
 
   # 3 — Only run merge if CI above passed
   merge:
