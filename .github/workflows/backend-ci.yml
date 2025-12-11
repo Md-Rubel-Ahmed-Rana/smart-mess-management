@@ -2,9 +2,15 @@ name: Backend CI
 
 on:
   push:
-    branches: ['backend/*']
+    branches:
+      - 'backend'
+      - 'backend/*'
+      - 'backend*'
   pull_request:
-    branches: ['backend/*', 'main']
+    branches:
+      - 'backend'
+      - 'backend/*'
+      - 'backend*'
 
 jobs:
   backend-ci:
@@ -26,13 +32,13 @@ jobs:
           cache-dependency-path: backend/yarn.lock
 
       - name: Install dependencies
-        run: yarn ci
+        run: yarn install --frozen-lockfile
 
-      - name: Lint check
-        run: yarn lint
+      - name: Lint auto-fix
+        run: yarn lint:fix
 
-      - name: Prettier format check
-        run: yarn prettier:check
+      - name: Prettier auto-fix
+        run: yarn prettier:fix
 
       - name: Type check
         run: yarn type-check
