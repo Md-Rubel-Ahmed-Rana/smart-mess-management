@@ -5,12 +5,13 @@ on:
     branches:
       - 'frontend'
       - 'frontend/*'
+      - 'frontend*'
 
   pull_request:
     branches:
       - 'frontend'
       - 'frontend/*'
-      - 'main'
+      - 'frontend*'
 
 jobs:
   frontend-ci:
