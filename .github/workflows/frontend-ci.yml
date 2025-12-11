@@ -32,7 +32,7 @@ jobs:
           cache-dependency-path: frontend/yarn.lock
 
       - name: Install dependencies
-        run: yarn ci
+        run: yarn install --frozen-lockfile
 
       - name: Lint check
         run: yarn lint
@@ -42,7 +42,7 @@ jobs:
 
       - name: Run tests (optional)
         run: yarn test -- --watch=false
-        continue-on-error: true # set to `false` if you want strict test rules
+        continue-on-error: true
 
       - name: Build the frontend
         run: yarn build
