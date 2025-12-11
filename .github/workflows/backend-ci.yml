@@ -13,38 +13,5 @@ on:
       - 'backend*'
 
 jobs:
-  backend-ci:
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: backend
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
-          cache-dependency-path: backend/yarn.lock
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Lint auto-fix
-        run: yarn lint:fix
-
-      - name: Prettier auto-fix
-        run: yarn prettier:fix
-
-      - name: Type check
-        run: yarn type-check
-
-      - name: Run tests
-        run: yarn test -- --coverage
-
-      - name: Build
-        run: yarn build
+  call-backend-ci:
+    uses: ./.github/workflows/reusable/backend-ci.yml
